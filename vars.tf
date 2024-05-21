@@ -99,12 +99,6 @@ variable workers_per_zone {
         condition     = var.workers_per_zone >= 2
     }
 }
-
-variable disable_public_service_endpoint {
-    description = "Disable public service endpoint for cluster"
-    type        = bool
-    default     = false
-}
 variable kube_version {
     description = "Specify the Kubernetes version, including the major.minor version. To see available versions, run `ibmcloud ks versions`."
     type        = string
