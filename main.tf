@@ -1,57 +1,95 @@
+##############################################################################
+# Terraform Providers
+##############################################################################
 terraform {
   required_providers {
     ibm = {
       source = "IBM-Cloud/ibm"
-      version = "~> 1.30.2"
+      version = ">=1.19.0"
     }
   }
 }
 ##############################################################################
-# Despliegue de recursos en el datacenter 
+# Provider
 ##############################################################################
-provider "ibm" {
-  alias  = "primary"
-  region = var.region
-  max_retries = 20
+provider ibm {
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = var.ibm_region
+  ibmcloud_timeout = 60
+  generation       = 2
 }
-data "ibm_resource_group" "group" {
-  provider = ibm.primary
+##############################################################################
+# Resource Group
+##############################################################################
+
+data ibm_resource_group resource_group {
   name = var.resource_group
 }
 ##############################################################################
-# Recuperar data de la SSH Key
-##############################################################################
-data "ibm_is_ssh_key" "sshkeypr" {
-  provider = ibm.primary
-  name = var.ssh_keyname
+# VPC Data
+#############################################################################
+data ibm_is_vpc vpc {
+  name = var.vpc_name
 }
-##############################################################################
-# Recuperar data de la VPC 
-##############################################################################
-data "ibm_is_vpc" "pr_vpc" {
-  provider = ibm.primary
-  name = var.name_vpc
-}
-##############################################################################
-# Recuperar data de la subnet
-##############################################################################
-data "ibm_is_subnet" "pr_subnet" {
-  provider = ibm.primary
-  name = var.name_subnet
-}
-resource "ibm_is_instance" "cce-vsi-pr" {
-  provider = ibm.primary
-  name    = "cce-vsipr-1"
-  image   = var.image_vsi
-  profile = "cx2-4x8"
-  primary_network_interface {
-    subnet = data.ibm_is_subnet.pr_subnet.id
-  }
-  vpc       = data.ibm_is_vpc.pr_vpc.id
-  zone      = "${var.region-name}-${var.subnet_zone}"
-  keys      = [data.ibm_is_ssh_key.sshkeypr.id]
-  resource_group = data.ibm_resource_group.group.id
+#############################################################################
+# Get Subnet Data
+# > If the subnets cannot all be gotten by name, replace the `name`
+#   field with the `identifier` field and get the subnets by ID instead
+#   of by name.
+#############################################################################
+data ibm_is_subnet subnets {
+  count = length(var.subnet_names)
+  name  = var.subnet_names[count.index]
 }
 
+##############################################################################
+# Create IKS on VPC Cluster
+##############################################################################
+
+resource ibm_container_vpc_cluster cluster {
+
+  name              = "${var.unique_id}-roks-cluster"
+  vpc_id            = data.ibm_is_vpc.vpc.id
+  resource_group_id = data.ibm_resource_group.resource_group.id
+  flavor            = var.machine_type
+  worker_count      = var.workers_per_zone
+  kube_version      = var.kube_version != "" ? var.kube_version : null
+  tags              = var.tags
+  wait_till         = var.wait_till
+  entitlement       = var.entitlement
+
+  dynamic zones {
+    for_each = data.ibm_is_subnet.subnets
+    content {
+      subnet_id = zones.value.id
+      name      = zones.value.zone
+    }
+  }
+}
+##############################################################################
+# Worker Pool
+##############################################################################
+
+resource ibm_container_vpc_worker_pool pool {
+
+    count              = length(var.worker_pools)
+    vpc_id             = data.ibm_is_vpc.vpc.id
+    resource_group_id  = data.ibm_resource_group.resource_group.id
+    entitlement        = var.entitlement
+    cluster            = ibm_container_vpc_cluster.cluster.id
+    worker_pool_name   = var.worker_pools[count.index].pool_name
+    flavor             = var.worker_pools[count.index].machine_type
+    worker_count       = var.worker_pools[count.index].workers_per_zone
+
+    dynamic zones {
+        for_each = data.ibm_is_subnet.subnets
+        content {
+            subnet_id = zones.value.id
+            name      = zones.value.zone
+        }
+    }
+
+
+}
 
 
