@@ -105,12 +105,6 @@ variable disable_public_service_endpoint {
     type        = bool
     default     = false
 }
-
-variable entitlement {
-    description = "If you purchased an IBM Cloud Cloud Pak that includes an entitlement to run worker nodes that are installed with OpenShift Container Platform, enter entitlement to create your cluster with that entitlement so that you are not charged twice for the OpenShift license. Note that this option can be set only when you create the cluster. After the cluster is created, the cost for the OpenShift license occurred and you cannot disable this charge."
-    type        = string
-    default     = "cloud_pak"
-}
 variable kube_version {
     description = "Specify the Kubernetes version, including the major.minor version. To see available versions, run `ibmcloud ks versions`."
     type        = string
@@ -192,50 +186,3 @@ variable worker_pools {
     }
 
 }
-
-##############################################################################
-
-##############################################################################
-# Resource Variables
-##############################################################################
-
-variable service_endpoints {
-    description = "Service endpoints for resource instances. Can be `public`, `private`, or `public-and-private`."
-    type        = string
-    default     = "private"
-
-    validation {
-        error_message = "Service endpoints must be `public`, `private`, or `public-and-private`."
-        condition = contains([
-            "private",
-            "public",
-            "public-and-private"
-        ], var.service_endpoints)
-    }
-}
-variable kms_plan {
-    description = "Plan for Key Protect"
-    type        = string
-    default     = "tiered-pricing"  
-}
-variable kms_root_key_name {
-    description = "Name of the root key for Key Protect instance"
-    type        = string
-    default     = "root-key"
-
-    validation {
-        error_message = "Key protect root key name  must match the regex `^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$."
-        condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$", var.kms_root_key_name))
-    }
-}
-variable kms_private_service_endpoint {
-    description = "Use private service endpoint for Key Protect instance"
-    type        = bool
-    default     = true
-}
-variable cos_plan {
-    description = "Plan for Cloud Object Storage instance"
-    type        = string
-    default     = "standard"
-}
-##############################################################################
