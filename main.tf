@@ -72,7 +72,6 @@ resource ibm_container_vpc_worker_pool pool {
     count              = length(var.worker_pools)
     vpc_id             = data.ibm_is_vpc.vpc.id
     resource_group_id  = data.ibm_resource_group.resource_group.id
-    entitlement        = var.entitlement
     cluster            = ibm_container_vpc_cluster.cluster.id
     worker_pool_name   = var.worker_pools[count.index].pool_name
     flavor             = var.worker_pools[count.index].machine_type
