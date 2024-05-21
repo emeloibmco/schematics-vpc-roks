@@ -13,7 +13,6 @@ terraform {
 # Provider
 ##############################################################################
 provider ibm {
-  ibmcloud_api_key = var.ibmcloud_api_key
   region           = var.ibm_region
   ibmcloud_timeout = 60
   generation       = 2
