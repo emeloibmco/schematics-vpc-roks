@@ -14,8 +14,7 @@ terraform {
 ##############################################################################
 provider ibm {
   region           = var.ibm_region
-  ibmcloud_timeout = 60
-  generation       = 2
+  max_retries = 20
 }
 ##############################################################################
 # Resource Group
@@ -55,7 +54,6 @@ resource ibm_container_vpc_cluster cluster {
   kube_version      = var.kube_version != "" ? var.kube_version : null
   tags              = var.tags
   wait_till         = var.wait_till
-  entitlement       = var.entitlement
 
   dynamic zones {
     for_each = data.ibm_is_subnet.subnets
