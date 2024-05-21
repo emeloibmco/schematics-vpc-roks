@@ -79,9 +79,6 @@ variable subnet_names {
     }
 
 }
-variable "ssh_keyname" {
-  description = "ssh key name of primary region"
-}
 ##############################################################################
 # Cluster Variables
 ##############################################################################
