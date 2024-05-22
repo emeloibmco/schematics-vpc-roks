@@ -52,7 +52,7 @@ resource ibm_container_vpc_cluster cluster {
   resource_group_id = data.ibm_resource_group.resource_group.id
   flavor            = var.machine_type
   worker_count      = var.workers_per_zone
-  #kube_version      = var.kube_version != "" ? var.kube_version : null
+  kube_version      = var.kube_version != "" ? var.kube_version : null
   tags              = var.tags
   wait_till         = var.wait_till
 

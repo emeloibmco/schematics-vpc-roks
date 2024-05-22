@@ -106,7 +106,7 @@ variable workers_per_zone {
 variable kube_version {
     description = "Specify the Kubernetes version, including the major.minor version. To see available versions, run `ibmcloud ks versions`."
     type        = string
-    default     = "4.5.35_openshift"
+    default     = "4.14.22_openshift"
 
     validation {
         error_message = "To create a ROKS cluster, the kube version must include `openshift`."
