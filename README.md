@@ -15,25 +15,25 @@ La presente guía esta enfocada en crear un despliegue de un cluster de openshif
 * Contar con una cuenta en <a href="https://cloud.ibm.com/"> IBM Cloud</a>.
 * Contar con un grupo de recursos específico para la implementación de los recursos.
 * Tener una VPC.
-* Tener dos o mas subnets con su respectivo segmento de red sobre la VPC.
+* Tener dos o más subnets con su respectivo segmento de red sobre la VPC.
 * API 
 
 > Nota: `instructivo para la creacion de VPC y subnets` <a href="https://github.com/emeloibmco/VPC-Despliegue-VSIs-Schematics/tree/main">IBM Cloud Schematics</a>
 
 ## Crear y configurar un espacio de trabajo en IBM Cloud Schematics 
-Lo primero que debe hacer es dirigirse al servicio de <a href="https://cloud.ibm.com/schematics/workspaces">IBM Cloud Schematics</a> y dar click en ```CREAR ESPACIO DE TRABAJO```, una vez hecho esto aparecera una ventana en la que debera diligenciar la siguiente información.
+Lo primero que debe hacer es dirigirse al servicio de <a href="https://cloud.ibm.com/schematics/workspaces">IBM Cloud Schematics</a> y dar click en ```CREAR ESPACIO DE TRABAJO```, una vez hecho esto aparecerá una ventana en la que deberá diligenciar la siguiente información.
 
 
 | Variable | Descripción |
 | ------------- | ------------- |
-| URL del repositorio de Gi  | https://github.com/emeloibmco/schematics-vpc-roks.git |
-| Tocken de acceso  | "(Opcional) Este parametro solo es necesario para trabajar con repositorio privados"  |
+| URL del repositorio de Git  | https://github.com/emeloibmco/schematics-vpc-roks.git |
+| Tocken de acceso  | "(Opcional) Este parámetro solo es necesario para trabajar con repositorio privados"  |
 | Version de Terraform | terraform_v0.14 |
 
 
-Presione ```SIGUIENTE```  > Agregue un nombre para el espacio de trabajo > Seleccione el grupo de recursos al que tiene acceso > Seleccione una ubicacion para el espacio de trabajo y como opcional puede dar una descripción. 
+Presione ```SIGUIENTE```  > Agregue un nombre para el espacio de trabajo > Seleccione el grupo de recursos al que tiene acceso > Seleccione una ubicación para el espacio de trabajo y como opcional puede dar una descripción. 
 
-Una vez completos todos los campos puede presionar la opcion ``` CREAR```.
+Una vez completos todos los campos puede presionar la opción ``` CREAR```.
 
 <p align="center">
 <img width="800" alt="img8" src=https://github.com/emeloibmco/VPC-Despliegue-VSIs-Schematics-IMG/blob/2bef55b7c51b55bd02f8eec81779d5ddaa2cb5c4/workspacecreate.gif>
@@ -63,11 +63,13 @@ service_endpoints               | string                                        
 </p>
 
 ### Generar y Aplicar el plan de despliegue del Cluster
-Ya que estan todos los campos de personalización completos, debe ir hasta la parte superior de la ventana donde encontrara dos opciones, Generar plan y Aplicar plan. Para continuar con el despliegue de los recursos debera presionar ```Generar Plan``` y una vez termine de generarse el plan ```Aplicar Plan```.
+Ya que están todos los campos de personalización completos, debe ir hasta la parte superior de la ventana donde encontrará dos opciones, Generar plan y Aplicar plan. Para continuar con el despliegue de los recursos deberá presionar ```Generar Plan``` y una vez termine de generarse el plan ```Aplicar Plan```.
 
-* ```Generar plan```: Según su configuración, Terraform crea un plan de ejecución y describe las acciones que deben ejecutarse para llegar al estado que se describe en sus archivos de configuración de Terraform. Para determinar las acciones, Schematics analiza los recursos que ya están aprovisionados en su cuenta de IBM Cloud para brindarle una vista previa de si los recursos deben agregarse, modificarse o eliminarse. Puede revisar el plan de ejecución, cambiarlo o simplemente ejecutar el plan
+* ```Generar plan```: Según su configuración, Terraform crea un plan de ejecución y describe las acciones que deben ejecutarse para llegar al estado que se describe en sus archivos de configuración de Terraform. Para determinar las acciones, Schematics analiza los recursos que ya están provisionados en su cuenta de IBM Cloud para brindarle una vista previa de si los recursos deben agregarse, modificarse o eliminarse. Puede revisar el plan de ejecución, cambiarlo o simplemente ejecutar el plan
 * ```Aplicar plan```: Cuando esté listo para realizar cambios en su entorno de nube, puede aplicar sus archivos de configuración de Terraform. Para ejecutar las acciones que se especifican en sus archivos de configuración, Schematics utiliza el complemento IBM Cloud Provider para Terraform.
 
 <p align="center">
 <img width="800" alt="img8" src=https://github.com/emeloibmco/VPC-Despliegue-VSIs-Schematics-IMG/blob/2bef55b7c51b55bd02f8eec81779d5ddaa2cb5c4/Despliegue.gif>
 </p>
+
+
