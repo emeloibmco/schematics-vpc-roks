@@ -40,7 +40,28 @@ data ibm_is_subnet subnets {
   count = length(var.subnet_names)
   name  = var.subnet_names[count.index]
 }
+##############################################################################
+# COS Instance
+##############################################################################
 
+resource ibm_resource_instance cos {
+  name              = "${var.unique_id}-cos"
+  service           = "cloud-object-storage"
+  plan              = "standard"
+  location          = "global"
+  resource_group_id = var.resource_group_id != "" ? var.resource_group_id : null
+
+  parameters = {
+    service-endpoints = "private"
+  }
+
+  timeouts {
+    create = "1h"
+    update = "1h"
+    delete = "1h"
+  }
+
+}
 ##############################################################################
 # Create IKS on VPC Cluster
 ##############################################################################
@@ -55,6 +76,7 @@ resource ibm_container_vpc_cluster cluster {
   kube_version      = var.kube_version != "" ? var.kube_version : null
   tags              = var.tags
   wait_till         = var.wait_till
+  cos_instance_crn  = ibm_resource_instance.cos.id
 
   dynamic zones {
     for_each = data.ibm_is_subnet.subnets
