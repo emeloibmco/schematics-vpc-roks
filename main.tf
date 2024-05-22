@@ -49,7 +49,7 @@ resource ibm_resource_instance cos {
   service           = "cloud-object-storage"
   plan              = "standard"
   location          = "global"
-  resource_group_id = var.resource_group_id != "" ? var.resource_group_id : null
+  resource_group_id = data.ibm_resource_group.resource_group.id != "" ? data.ibm_resource_group.resource_group.id : null
 
   parameters = {
     service-endpoints = "private"
